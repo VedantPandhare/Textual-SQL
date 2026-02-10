@@ -25,8 +25,20 @@ class DatabaseEngine:
         """Executes a SQL query and returns results as a list of dicts."""
         try:
             with self.engine.connect() as conn:
-                df = pd.read_sql_query(text(sql), conn)
-                return df.to_dict(orient='records')
+                # Use a transaction for operations like INSERT, UPDATE, ALTER
+                with conn.begin():
+                    result = conn.execute(text(sql))
+                    
+                    if result.returns_rows:
+                        # For SELECT statements
+                        rows = result.all()
+                        if not rows:
+                            return []
+                        df = pd.DataFrame(rows, columns=result.keys())
+                        return df.to_dict(orient='records')
+                    else:
+                        # For INSERT, UPDATE, DELETE, ALTER, etc.
+                        return [{"message": "Operation successful", "rows_affected": result.rowcount}]
         except Exception as e:
             raise Exception(f"Query execution failed: {str(e)}")
 
