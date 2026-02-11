@@ -2,7 +2,7 @@
 
 Textual SQL is a premium, AI-powered platform that allows you to talk to your databases in plain English. Powered by RAG (Retrieval-Augmented Generation) and Groq's high-performance LLMs, it converts natural language queries into optimized SQL in seconds.
 
-![Landing Page Preview](file:///C:/Users/Vedant/.gemini/antigravity/brain/290360aa-fd7c-4464-ad2c-7687c88e44f3/media__1770795164248.png)
+![Landing Page Preview](./landing_page.png)
 
 ## ✨ Features
 
