@@ -34,7 +34,7 @@ export default function SetupPage() {
                 setStatus({ type: "success", message: data.message || "Connected successfully!" });
                 // Wait a bit before redirecting
                 setTimeout(() => {
-                    router.push("/");
+                    router.push("/chat");
                 }, 1500);
             } else {
                 setStatus({ type: "error", message: data.detail || "Failed to connect." });

@@ -1,256 +1,73 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw, Loader2 } from "lucide-react";
+import { ArrowRight, Database, Code, Shield, Zap } from "lucide-react";
+import { DottedSurface } from "@/components/DottedSurface";
 
-interface Message {
-  role: "user" | "bot";
-  content: string;
-  sql?: string;
-  results?: any[];
-}
-
-export default function ChatPage() {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "bot",
-      content: "Hello! I'm your Intelligent SQL Assistant. You can ask me questions about your database in plain English.",
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
-  const [checkingConnection, setCheckingConnection] = useState(true);
-  const scrollRef = useRef<HTMLDivElement>(null);
+export default function LandingPage() {
   const router = useRouter();
 
-  useEffect(() => {
-    checkConnection();
-  }, []);
-
-  const checkConnection = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/connection-status");
-      const data = await response.json();
-      if (!data.connected) {
-        router.push("/setup");
-      } else {
-        setCheckingConnection(false);
-      }
-    } catch (error) {
-      console.error("Failed to check connection status:", error);
-      // If server is down, we still wait or show error, but for redirect logic:
-      setCheckingConnection(false);
-    }
-  };
-
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
-
-    const userQuery = input.trim();
-    setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userQuery }]);
-    setLoading(true);
-
-    try {
-      const response = await fetch("http://localhost:8000/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: userQuery }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            role: "bot",
-            content: data.message || "Here are the results for your query:",
-            sql: data.sql,
-            results: data.results,
-          },
-        ]);
-      } else {
-        setMessages((prev) => [
-          ...prev,
-          { role: "bot", content: `Error: ${data.detail || "Something went wrong"}` },
-        ]);
-      }
-    } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        { role: "bot", content: "Failed to connect to the backend server. Please ensure FastAPI is running." },
-      ]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const indexSchema = async () => {
-    setLoading(true);
-    try {
-      const resp = await fetch("http://localhost:8000/index-schema", { method: "POST" });
-      const data = await resp.json();
-      alert(data.message || "Schema indexed!");
-    } catch (err) {
-      alert("Failed to index schema.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (checkingConnection) {
-    return (
-      <div className="h-screen bg-[#0a0a0b] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-          <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Initializing Intelligence...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col h-screen bg-[#0a0a0b] text-white font-sans selection:bg-blue-500/30">
-      {/* Header */}
-      <header className="border-b border-white/10 p-4 flex justify-between items-center backdrop-blur-md bg-black/20 sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-            <Database className="w-6 h-6" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              SQL Intelligence
-            </h1>
-            <p className="text-xs text-white/40 font-medium tracking-wide flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-              RAG-POWERED ANALYTICS
-            </p>
-          </div>
+    <div className="relative min-h-screen bg-[#0a0a0b] text-white overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+      {/* Background Effect */}
+      <DottedSurface />
+
+      <div className="z-10 max-w-4xl space-y-8 animate-in fade-in zoom-in duration-1000">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold tracking-[0.3em] uppercase text-blue-400 mb-4">
+          <Zap className="w-3 h-3 fill-current" />
+          RAG-Powered Intelligence
         </div>
-        <div className="flex gap-2">
+
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+          TEXTUAL<br />
+          <span className="bg-gradient-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">
+            SQL
+          </span>
+        </h1>
+
+        <p className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto leading-relaxed font-medium">
+          Bridge the gap between natural language and complex databases.
+          Talk to your data in plain English and let AI handle the query generation.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
           <button
             onClick={() => router.push("/setup")}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95 text-white/60"
+            className="group relative px-8 py-5 bg-white text-black text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
           >
-            Settings
+            Get Started
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
+
           <button
-            onClick={indexSchema}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95"
+            onClick={() => window.open("https://github.com/VedantPandhare/Textual-SQL", "_blank")}
+            className="px-8 py-5 bg-white/5 border border-white/10 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-white/10 active:scale-95 text-white/60"
           >
-            <RefreshCcw className="w-4 h-4" />
-            Sync Schema
+            View Github
           </button>
         </div>
-      </header>
 
-      {/* Chat Area */}
-      <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 max-w-5xl mx-auto w-full scrollbar-hide" ref={scrollRef}>
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-            <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${msg.role === "user" ? "bg-white/10 border border-white/10" : "bg-blue-600/10 border border-blue-500/20"
-              }`}>
-              {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-blue-400" />}
-            </div>
-
-            <div className={`flex flex-col gap-3 max-w-[85%] ${msg.role === "user" ? "items-end" : ""}`}>
-              <div className={`p-4 rounded-3xl leading-relaxed ${msg.role === "user"
-                  ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]"
-                  : "bg-white/5 border border-white/10 rounded-tl-none"
-                }`}>
-                {msg.content}
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-20">
+          {[
+            { icon: <Database />, title: "Schema Aware", desc: "Instantly indexes your database schema for accurate queries." },
+            { icon: <Code />, title: "SQL Generation", desc: "Converts natural language to optimized SQL in seconds." },
+            { icon: <Shield />, title: "Secure Access", desc: "Uses standard pooler connections with local persistence." }
+          ].map((feature, i) => (
+            <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-3xl text-left space-y-3 backdrop-blur-sm transition-all hover:border-blue-500/50 group">
+              <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                {feature.icon}
               </div>
-
-              {msg.sql && (
-                <div className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
-                    <div className="flex items-center gap-2 text-xs font-mono text-white/60 uppercase tracking-widest">
-                      <Terminal className="w-3.5 h-3.5" />
-                      Generated SQL
-                    </div>
-                  </div>
-                  <pre className="p-4 overflow-x-auto text-sm font-mono text-blue-300">
-                    <code>{msg.sql}</code>
-                  </pre>
-                </div>
-              )}
-
-              {msg.results && msg.results.length > 0 && (
-                <div className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
-                    <div className="flex items-center gap-2 text-xs font-mono text-white/60 uppercase tracking-widest">
-                      <TableIcon className="w-3.5 h-3.5" />
-                      Query Results
-                    </div>
-                  </div>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left">
-                      <thead>
-                        <tr className="border-b border-white/10 bg-white/5">
-                          {Object.keys(msg.results[0]).map((key) => (
-                            <th key={key} className="px-4 py-3 font-semibold text-white/40 uppercase tracking-wider text-[10px]">{key}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {msg.results.map((row, idx) => (
-                          <tr key={idx} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                            {Object.values(row).map((val: any, j) => (
-                              <td key={j} className="px-4 py-3 text-white/80">{String(val)}</td>
-                            ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
+              <h3 className="text-lg font-bold font-sans uppercase tracking-widest text-[10px] text-white/40">{feature.title}</h3>
+              <p className="text-sm text-white/60 leading-relaxed font-medium">{feature.desc}</p>
             </div>
-          </div>
-        ))}
-        {loading && (
-          <div className="flex gap-4 animate-pulse">
-            <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white/20" />
-            </div>
-            <div className="h-12 bg-white/5 border border-white/10 rounded-3xl rounded-tl-none w-32" />
-          </div>
-        )}
-      </main>
-
-      {/* Input Area */}
-      <div className="p-4 md:p-8 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b] to-transparent">
-        <div className="max-w-5xl mx-auto">
-          <form onSubmit={handleSubmit} className="relative group">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Query your database (e.g., 'Show me all orders from Alice')"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 pr-14 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg placeholder:text-white/20 hover:border-white/20"
-            />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="absolute right-3 top-3 p-3 bg-blue-600 rounded-xl text-white hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 transition-all shadow-lg active:scale-95"
-            >
-              <Send className="w-6 h-6" />
-            </button>
-          </form>
-          <p className="text-center text-[10px] text-white/20 mt-4 uppercase tracking-[0.2em] font-medium">
-            Next.js 16 • FastAPI • Groq Llama 3 • RAG Architecture
-          </p>
+          ))}
         </div>
       </div>
+
+      <p className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-white/20 uppercase tracking-[0.4em] font-black">
+        Vedant Pandhare • Next.js • FastAPI • Groq
+      </p>
     </div>
   );
 }
