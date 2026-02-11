@@ -87,8 +87,10 @@ class DatabaseEngine:
                 
             with open(env_path, "w") as f:
                 f.writelines(new_lines)
+            print("✅ .env file updated successfully.")
         except Exception as e:
-            print(f"⚠️ Could not update .env file: {str(e)}")
+            # Silently fail on cloud deployments where files are read-only
+            print(f"ℹ️ Skipping .env update: {str(e)}")
 
     def is_connected(self) -> bool:
         """Checks if the database engine is initialized and responsive."""

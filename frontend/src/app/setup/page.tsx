@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Database, Link as LinkIcon, AlertCircle, CheckCircle2, Loader2, ArrowRight, PlayCircle, Eye, EyeOff } from "lucide-react";
 import { DottedSurface } from "@/components/DottedSurface";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 export default function SetupPage() {
     const [dbUrl, setDbUrl] = useState("");
     const [dbType, setDbType] = useState("postgresql");
@@ -29,7 +31,7 @@ export default function SetupPage() {
         setStatus({ type: "idle", message: "" });
 
         try {
-            const response = await fetch("http://localhost:8000/connect", {
+            const response = await fetch(`${API_BASE}/connect`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ db_url: finalUrl, db_type: dbType }),
@@ -87,8 +89,8 @@ export default function SetupPage() {
                         <button
                             onClick={handleDemo}
                             className={`w-full font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 group/demo border ${isDemo
-                                    ? "bg-blue-600 text-white border-blue-400 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
-                                    : "bg-white/5 border-white/10 hover:bg-white/10 text-white/60 hover:text-white"
+                                ? "bg-blue-600 text-white border-blue-400 shadow-[0_0_20px_rgba(37,99,235,0.3)]"
+                                : "bg-white/5 border-white/10 hover:bg-white/10 text-white/60 hover:text-white"
                                 }`}
                         >
                             <PlayCircle className={`w-5 h-5 transition-transform ${isDemo ? "animate-pulse" : "group-hover:scale-110"}`} />

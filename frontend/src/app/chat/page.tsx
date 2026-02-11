@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw, Loader2, Settings } from "lucide-react";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
 interface Message {
   role: "user" | "bot";
   content: string;
@@ -30,7 +32,7 @@ export default function ChatPage() {
 
   const checkConnection = async () => {
     try {
-      const response = await fetch("http://localhost:8000/connection-status");
+      const response = await fetch(`${API_BASE}/connection-status`);
       const data = await response.json();
       if (!data.connected) {
         router.push("/setup");
@@ -59,7 +61,7 @@ export default function ChatPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/ask", {
+      const response = await fetch(`${API_BASE}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query: userQuery }),
@@ -96,7 +98,7 @@ export default function ChatPage() {
   const indexSchema = async () => {
     setLoading(true);
     try {
-      const resp = await fetch("http://localhost:8000/index-schema", { method: "POST" });
+      const resp = await fetch(`${API_BASE}/index-schema`, { method: "POST" });
       const data = await resp.json();
       alert(data.message || "Schema indexed!");
     } catch (err) {
@@ -164,8 +166,8 @@ export default function ChatPage() {
 
             <div className={`flex flex-col gap-3 max-w-[85%] ${msg.role === "user" ? "items-end" : ""}`}>
               <div className={`p-4 rounded-3xl leading-relaxed ${msg.role === "user"
-                  ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]"
-                  : "bg-white/5 border border-white/10 rounded-tl-none"
+                ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]"
+                : "bg-white/5 border border-white/10 rounded-tl-none"
                 }`}>
                 {msg.content}
               </div>
