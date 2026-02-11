@@ -10,3 +10,4 @@ sqlalchemy
 python-dotenv
 pandas
 psycopg2-binary
+numpy==1.26.4
