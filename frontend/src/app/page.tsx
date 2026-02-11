@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw, Loader2 } from "lucide-react";
 
 interface Message {
   role: "user" | "bot";
@@ -19,7 +20,29 @@ export default function ChatPage() {
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const [checkingConnection, setCheckingConnection] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    checkConnection();
+  }, []);
+
+  const checkConnection = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/connection-status");
+      const data = await response.json();
+      if (!data.connected) {
+        router.push("/setup");
+      } else {
+        setCheckingConnection(false);
+      }
+    } catch (error) {
+      console.error("Failed to check connection status:", error);
+      // If server is down, we still wait or show error, but for redirect logic:
+      setCheckingConnection(false);
+    }
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -84,6 +107,17 @@ export default function ChatPage() {
     }
   };
 
+  if (checkingConnection) {
+    return (
+      <div className="h-screen bg-[#0a0a0b] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+          <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Initializing Intelligence...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen bg-[#0a0a0b] text-white font-sans selection:bg-blue-500/30">
       {/* Header */}
@@ -102,31 +136,37 @@ export default function ChatPage() {
             </p>
           </div>
         </div>
-        <button 
-          onClick={indexSchema}
-          className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95"
-        >
-          <RefreshCcw className="w-4 h-4" />
-          Sync Schema
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => router.push("/setup")}
+            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95 text-white/60"
+          >
+            Settings
+          </button>
+          <button
+            onClick={indexSchema}
+            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95"
+          >
+            <RefreshCcw className="w-4 h-4" />
+            Sync Schema
+          </button>
+        </div>
       </header>
 
       {/* Chat Area */}
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 max-w-5xl mx-auto w-full scrollbar-hide" ref={scrollRef}>
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-            <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${
-              msg.role === "user" ? "bg-white/10 border border-white/10" : "bg-blue-600/10 border border-blue-500/20"
-            }`}>
+            <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${msg.role === "user" ? "bg-white/10 border border-white/10" : "bg-blue-600/10 border border-blue-500/20"
+              }`}>
               {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-blue-400" />}
             </div>
-            
+
             <div className={`flex flex-col gap-3 max-w-[85%] ${msg.role === "user" ? "items-end" : ""}`}>
-              <div className={`p-4 rounded-3xl leading-relaxed ${
-                msg.role === "user" 
-                  ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]" 
+              <div className={`p-4 rounded-3xl leading-relaxed ${msg.role === "user"
+                  ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]"
                   : "bg-white/5 border border-white/10 rounded-tl-none"
-              }`}>
+                }`}>
                 {msg.content}
               </div>
 
@@ -146,7 +186,7 @@ export default function ChatPage() {
 
               {msg.results && msg.results.length > 0 && (
                 <div className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                   <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
+                  <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
                     <div className="flex items-center gap-2 text-xs font-mono text-white/60 uppercase tracking-widest">
                       <TableIcon className="w-3.5 h-3.5" />
                       Query Results
