@@ -22,21 +22,22 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     useEffect(() => {
         if (!containerRef.current) return;
 
-        const SEPARATION = 150;
-        const AMOUNTX = 40;
+        const SEPARATION = 100;
+        const AMOUNTX = 60;
         const AMOUNTY = 60;
 
         // Scene setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0xffffff, 2000, 10000);
+        scene.fog = new THREE.Fog(0x0a0a0b, 1000, 10000);
 
         const camera = new THREE.PerspectiveCamera(
-            60,
+            75,
             window.innerWidth / window.innerHeight,
             1,
             10000,
         );
-        camera.position.set(0, 355, 1220);
+        camera.position.set(0, 800, 1500);
+        camera.lookAt(0, 0, 0);
 
         const renderer = new THREE.WebGLRenderer({
             alpha: true,
@@ -44,7 +45,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(scene.fog.color, 0);
+        renderer.setClearColor(0x000000, 0);
 
         containerRef.current.appendChild(renderer.domElement);
 
@@ -63,7 +64,13 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
                 positions.push(x, y, z);
                 if (theme === 'dark') {
-                    colors.push(0.8, 0.8, 0.8); // THREE colors are 0-1
+                    // Mix of white and blue
+                    const isBlue = Math.random() > 0.8;
+                    if (isBlue) {
+                        colors.push(0.2, 0.4, 1.0);
+                    } else {
+                        colors.push(0.6, 0.6, 0.6);
+                    }
                 } else {
                     colors.push(0, 0, 0);
                 }
@@ -78,10 +85,10 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
         // Create material
         const material = new THREE.PointsMaterial({
-            size: 8,
+            size: 10,
             vertexColors: true,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.6,
             sizeAttenuation: true,
         });
 
