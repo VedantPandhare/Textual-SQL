@@ -8,11 +8,12 @@ export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0b] text-white overflow-hidden flex flex-col items-center justify-center p-6 text-center">
-      {/* Background Effect */}
-      <DottedSurface />
+    <div className="relative min-h-screen text-white overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+      {/* Background Layer */}
+      <div className="absolute inset-0 bg-[#0a0a0b] -z-20" />
+      <DottedSurface className="z-0 opacity-40" />
 
-      <div className="z-10 max-w-4xl space-y-8 animate-in fade-in zoom-in duration-1000">
+      <div className="relative z-10 max-w-4xl space-y-8 animate-in fade-in zoom-in duration-1000">
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold tracking-[0.3em] uppercase text-blue-400 mb-4">
           <Zap className="w-3 h-3 fill-current" />
           RAG-Powered Intelligence

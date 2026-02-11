@@ -44,13 +44,11 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        // theme might not be available immediately or might change
         renderer.setClearColor(scene.fog.color, 0);
 
         containerRef.current.appendChild(renderer.domElement);
 
         // Create particles
-        const particles: THREE.Points[] = [];
         const positions: number[] = [];
         const colors: number[] = [];
 
@@ -65,7 +63,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
                 positions.push(x, y, z);
                 if (theme === 'dark') {
-                    colors.push(200, 200, 200);
+                    colors.push(0.8, 0.8, 0.8); // THREE colors are 0-1
                 } else {
                     colors.push(0, 0, 0);
                 }
@@ -176,7 +174,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
     return (
         <div
             ref={containerRef}
-            className={cn('pointer-events-none fixed inset-0 -z-10', className)}
+            className={cn('pointer-events-none fixed inset-0 z-0', className)}
             {...props}
         />
     );
