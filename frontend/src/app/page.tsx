@@ -20,9 +20,9 @@ export default function LandingPage() {
         </div>
 
         <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
-          TEXTUAL<br />
-          <span className="bg-gradient-to-r from-blue-500 to-indigo-400 bg-clip-text text-transparent">
-            SQL
+          QuerySense<br />
+          <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-500 bg-clip-text text-transparent">
+            DB
           </span>
         </h1>
 
@@ -34,7 +34,7 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
           <button
             onClick={() => router.push("/setup")}
-            className="group relative px-8 py-5 bg-white text-black text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+            className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_0_50px_rgba(37,99,235,0.4)] active:scale-95 shadow-xl"
           >
             Get Started
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

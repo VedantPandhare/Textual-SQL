@@ -58,6 +58,7 @@ export default function SetupPage() {
         const demoUrl = "postgresql://postgres.yedvxjptltirkwgtvehp:Supabase007@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres";
         setIsDemo(true);
         setDbUrl("(Demo Database Connected)");
+        setStatus({ type: "idle", message: "Establishing demo connection. This will take 2-3 minutes..." });
         handleConnect(undefined, demoUrl);
     };
 

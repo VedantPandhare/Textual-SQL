@@ -18,7 +18,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
-      content: "Hello! I'm your Intelligent SQL Assistant. You can ask me questions about your database in plain English.",
+      content: "Hello! I'm CRUDbot. I can help you explore and manage your database using natural language. What can I help you with today?",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -128,8 +128,8 @@ export default function ChatPage() {
             <Database className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent">
-              SQL Intelligence
+            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+              CRUDbot
             </h1>
             <p className="text-xs text-white/40 font-medium tracking-wide flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
@@ -165,9 +165,9 @@ export default function ChatPage() {
             </div>
 
             <div className={`flex flex-col gap-3 max-w-[85%] ${msg.role === "user" ? "items-end" : ""}`}>
-              <div className={`p-4 rounded-3xl leading-relaxed ${msg.role === "user"
-                ? "bg-blue-600 text-white rounded-tr-none shadow-[0_8px_30px_rgb(37,99,235,0.2)]"
-                : "bg-white/5 border border-white/10 rounded-tl-none"
+              <div className={`p-4 rounded-2xl leading-relaxed text-[15px] ${msg.role === "user"
+                ? "bg-blue-600 text-white rounded-tr-none shadow-[0_4px_20px_rgba(37,99,235,0.25)]"
+                : "bg-white/[0.03] border border-white/10 rounded-tl-none backdrop-blur-md"
                 }`}>
                 {msg.content}
               </div>

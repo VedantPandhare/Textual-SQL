@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Textual - Structured Query Language",
-  description: "Intelligent SQL Assistant powered by RAG",
+  title: "QuerySense DB - Intelligent SQL Assistant",
+  description: "Advanced RAG-powered database intelligence for natural language querying.",
 };
 
 export default function RootLayout({
