@@ -66,9 +66,6 @@ export default function LandingPage() {
         </div>
       </div>
 
-      <p className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-white/20 uppercase tracking-[0.4em] font-black">
-        Vedant Pandhare • Next.js • FastAPI • Groq
-      </p>
     </div>
   );
 }

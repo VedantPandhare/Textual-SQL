@@ -248,9 +248,6 @@ export default function ChatPage() {
               <Send className="w-6 h-6" />
             </button>
           </form>
-          <p className="text-center text-[10px] text-white/20 mt-4 uppercase tracking-[0.2em] font-medium">
-            Next.js 16 • FastAPI • Groq Llama 3 • RAG Architecture
-          </p>
         </div>
       </div>
     </div>
