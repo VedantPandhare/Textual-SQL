@@ -40,22 +40,22 @@ export default function MCPDocsPage() {
                         <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
                             <Monitor className="w-6 h-6" />
                         </div>
-                        <h2 className="text-2xl font-bold">Global Setup (Secure)</h2>
+                        <h2 className="text-2xl font-bold">Vercel Deployment (Best)</h2>
                         <div className="space-y-4 text-white/60">
-                            <p>1. Deploy the backend to a cloud provider (e.g. Render).</p>
-                            <p>2. Add <code className="text-blue-400">GROQ_API_KEY</code> to your cloud env variables.</p>
-                            <p>3. Update Claude config with your deployed URL:</p>
+                            <p>1. Connect your repo and set root to <code className="text-blue-400">backend</code>.</p>
+                            <p>2. Add <code className="text-blue-400">GROQ_API_KEY</code> and <code className="text-blue-400">DATABASE_URL</code> to Vercel env.</p>
+                            <p>3. Update Claude config with your Vercel URL:</p>
                             <pre className="p-4 bg-black/40 rounded-xl text-[11px] font-mono border border-white/5 overflow-x-auto text-blue-300">
                                 {`{
   "mcpServers": {
     "querysense": {
       "type": "http",
-      "url": "https://your-app.com/sse"
+      "url": "https://your-app.vercel.app/sse"
     }
   }
 }`}
                             </pre>
-                            <p className="text-xs italic text-white/30">※ This prevents your API keys from being exposed in local config files.</p>
+                            <p className="text-xs italic text-white/30">※ Vercel provides the best performance and security for your API keys.</p>
                         </div>
                     </div>
 

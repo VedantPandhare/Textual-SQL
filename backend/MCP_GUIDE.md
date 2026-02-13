@@ -2,18 +2,22 @@
 
 This guide explains how to connect **Textual SQL** to external AI tools like **Claude Desktop**.
 
-## 🌐 Global / Remote Setup (Recommended)
+## 🌐 Global / Remote Setup (Vercel - Recommended)
 
-To avoid exposing your API keys in local config files and to access your server from anywhere, use the **HTTP (SSE)** transport.
+To avoid exposing your API keys in local config files and for the best performance, deploy to **Vercel**.
 
-### 1. Deploy the Server
-Deploy the `backend` folder to a provider like **Render**, **Railway**, or **Railway**.
-- **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `python backend/mcp_server_sse.py`
-- **Environment Variables**: Add `GROQ_API_KEY` and `DATABASE_URL` to your cloud provider's dashboard.
+### 1. Deploy the Backend
+1. Go to the [Vercel Dashboard](https://vercel.com/dashboard) and "Add New Project".
+2. Link your repository.
+3. **Important**: Set the "Root Directory" to `backend`.
+4. Add **Environment Variables**:
+   - `GROQ_API_KEY`: Your Groq API key.
+   - `DATABASE_URL`: Your remote database URL (e.g., Supabase PostgreSQL).
+5. Click **Deploy**.
 
 ### 2. Configure Claude Desktop
-Open your `%APPDATA%\Claude\claude_desktop_config.json` and add:
+Once deployed, your MCP server is accessible at `https://your-project.vercel.app/sse`.
+Update your `%APPDATA%\Claude\claude_desktop_config.json`:
 
 ```json
 {
