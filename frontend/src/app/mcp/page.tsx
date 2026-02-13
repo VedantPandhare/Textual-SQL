@@ -40,27 +40,22 @@ export default function MCPDocsPage() {
                         <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
                             <Monitor className="w-6 h-6" />
                         </div>
-                        <h2 className="text-2xl font-bold">Claude Desktop Setup</h2>
+                        <h2 className="text-2xl font-bold">Global Setup (Secure)</h2>
                         <div className="space-y-4 text-white/60">
-                            <p>1. Open your Claude config file:</p>
-                            <code className="block p-3 bg-black/40 rounded-lg text-xs font-mono border border-white/5">
-                                %APPDATA%\Claude\claude_desktop_config.json
-                            </code>
-                            <p>2. Add the following configuration:</p>
+                            <p>1. Deploy the backend to a cloud provider (e.g. Render).</p>
+                            <p>2. Add <code className="text-blue-400">GROQ_API_KEY</code> to your cloud env variables.</p>
+                            <p>3. Update Claude config with your deployed URL:</p>
                             <pre className="p-4 bg-black/40 rounded-xl text-[11px] font-mono border border-white/5 overflow-x-auto text-blue-300">
                                 {`{
   "mcpServers": {
     "querysense": {
-      "command": "python",
-      "args": ["D:/TEXTSQL/backend/mcp_server.py"],
-      "env": {
-        "GROQ_API_KEY": "your_key",
-        "DATABASE_URL": "sqlite:///D:/TEXTSQL/chinook.db"
-      }
+      "type": "http",
+      "url": "https://your-app.com/sse"
     }
   }
 }`}
                             </pre>
+                            <p className="text-xs italic text-white/30">※ This prevents your API keys from being exposed in local config files.</p>
                         </div>
                     </div>
 
