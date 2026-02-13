@@ -40,13 +40,18 @@ export default function LandingPage() {
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </button>
 
-          <button
-            onClick={() => router.push("/mcp")}
-            className="px-8 py-5 bg-blue-500/10 border border-blue-500/20 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-blue-500/20 active:scale-95 text-blue-400"
-          >
-            <Plug className="w-5 h-5" />
-            MCP Server
-          </button>
+          <div className="relative">
+            <button
+              onClick={() => router.push("/mcp")}
+              className="px-8 py-5 bg-blue-500/10 border border-blue-500/20 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-blue-500/20 active:scale-95 text-blue-400 group"
+            >
+              <Plug className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+              MCP Server
+            </button>
+            <span className="absolute -top-2 -right-2 px-2 py-1 rounded-lg bg-indigo-500 text-[10px] font-black text-white shadow-lg shadow-indigo-500/30 animate-pulse">
+              HYBRID
+            </span>
+          </div>
 
           <button
             onClick={() => window.open("https://github.com/VedantPandhare/Textual-SQL", "_blank")}
