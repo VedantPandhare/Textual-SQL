@@ -35,7 +35,7 @@ To connect **Claude Desktop**, add this to your `%APPDATA%\Claude\claude_desktop
 
 ---
 
-## 🛠️ Performance & Security
+## �️ Performance & Security
 - **Streamable HTTP**: Unlike traditional servers, this uses Vercel's high-speed streamable transport.
 - **Zero-Backend**: No separate Python server to maintain for external tools.
 - **Global Availability**: Other users can connect to your server just by adding your Vercel URL to their Claude config.
