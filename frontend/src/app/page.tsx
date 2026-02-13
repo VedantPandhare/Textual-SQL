@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowRight, Database, Code, Shield, Zap } from "lucide-react";
+import { ArrowRight, Database, Code, Shield, Zap, Plug } from "lucide-react";
 import { DottedSurface } from "@/components/DottedSurface";
 
 export default function LandingPage() {
@@ -38,6 +38,14 @@ export default function LandingPage() {
           >
             Get Started
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          <button
+            onClick={() => router.push("/mcp")}
+            className="px-8 py-5 bg-blue-500/10 border border-blue-500/20 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-blue-500/20 active:scale-95 text-blue-400"
+          >
+            <Plug className="w-5 h-5" />
+            MCP Server
           </button>
 
           <button

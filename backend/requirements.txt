@@ -7,6 +7,7 @@ google-generativeai
 langchain-groq
 pydantic
 sqlalchemy
+mcp
 python-dotenv
 pandas
 psycopg2-binary
