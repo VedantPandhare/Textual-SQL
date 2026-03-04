@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from db_engine import DatabaseEngine
 from rag_manager import RAGManager
 from sql_agent import SQLAgent
+from import_manager import ImportManager
+from fastapi import UploadFile, File
 import os
 import traceback
 
@@ -22,6 +24,7 @@ app.add_middleware(
 db_engine = DatabaseEngine()
 rag_manager = RAGManager(db_engine)
 sql_agent = SQLAgent(db_engine, rag_manager)
+import_manager = ImportManager(db_engine)
 
 class QueryRequest(BaseModel):
     query: str
@@ -85,6 +88,29 @@ async def reindex_schema():
         raise e
     except Exception as e:
         print("❌ CRITICAL ERROR in /index-schema:")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/import")
+async def import_file(file: UploadFile = File(...)):
+    try:
+        if not db_engine.is_connected():
+            raise HTTPException(status_code=400, detail="Database not connected.")
+            
+        content = await file.read()
+        result = await import_manager.process_and_sync(content, file.filename)
+        
+        if result["success"]:
+            # Re-index schema automatically on new import
+            rag_manager.index_schema()
+            return result
+        else:
+            raise HTTPException(status_code=400, detail=result["error"])
+            
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"❌ CRITICAL ERROR in /import: {str(e)}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 

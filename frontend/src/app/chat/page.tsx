@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw, Loader2, Settings } from "lucide-react";
+import { Send, Database, Terminal, Table as TableIcon, Bot, User, RefreshCcw, Loader2, Settings, Plus, Paperclip } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -22,7 +22,9 @@ export default function ChatPage() {
     },
   ]);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [checkingConnection, setCheckingConnection] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -94,6 +96,50 @@ export default function ChatPage() {
       setLoading(false);
     }
   };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setMessages((prev) => [...prev, { role: "user", content: `Importing file: ${file.name}...` }]);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch(`${API_BASE}/import`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "bot",
+            content: `✅ ${data.message}. You can now query the '${data.table_name}' table.`,
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: "bot", content: `❌ Import failed: ${data.detail || "Unknown error"}` },
+        ]);
+      }
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: "❌ Failed to connect to the backend server for file import." },
+      ]);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
 
   const indexSchema = async () => {
     setLoading(true);
@@ -234,19 +280,37 @@ export default function ChatPage() {
         <div className="max-w-5xl mx-auto">
           <form onSubmit={handleSubmit} className="relative group">
             <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              className="hidden"
+              accept=".csv, .xlsx, .xls"
+            />
+            <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Query your database (e.g., 'Show me all orders from Alice')"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 pr-14 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg placeholder:text-white/20 hover:border-white/20"
+              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 pr-28 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg placeholder:text-white/20 hover:border-white/20"
             />
-            <button
-              type="submit"
-              disabled={loading || !input.trim()}
-              className="absolute right-3 top-3 p-3 bg-blue-600 rounded-xl text-white hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 transition-all shadow-lg active:scale-95"
-            >
-              <Send className="w-6 h-6" />
-            </button>
+            <div className="absolute right-3 top-3 flex gap-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading || loading}
+                className="p-3 bg-white/5 border border-white/10 rounded-xl text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-50 transition-all active:scale-95"
+                title="Import CSV or Excel"
+              >
+                {uploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Plus className="w-6 h-6" />}
+              </button>
+              <button
+                type="submit"
+                disabled={loading || !input.trim() || uploading}
+                className="p-3 bg-blue-600 rounded-xl text-white hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 transition-all shadow-lg active:scale-95"
+              >
+                <Send className="w-6 h-6" />
+              </button>
+            </div>
           </form>
         </div>
       </div>
