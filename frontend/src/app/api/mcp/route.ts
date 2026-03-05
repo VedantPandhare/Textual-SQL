@@ -3,10 +3,10 @@ import { z } from "zod";
 import { DatabaseService } from "@/lib/mcp/db";
 import { SQLAgent } from "@/lib/mcp/agent";
 
-const db = new DatabaseService();
-const agent = new SQLAgent(db);
-
 export const POST = createMcpHandler(async (server) => {
+    const db = new DatabaseService();
+    const agent = new SQLAgent(db);
+
     server.tool(
         "query_database",
         "Ask a natural language question about the database. Uses RAG and LLM to generate SQL.",
