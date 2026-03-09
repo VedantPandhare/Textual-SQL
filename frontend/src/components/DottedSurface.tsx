@@ -28,7 +28,7 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
         // Scene setup
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x0a0a0b, 1000, 10000);
+        scene.fog = new THREE.Fog(0x09090b, 1000, 10000);
 
         const camera = new THREE.PerspectiveCamera(
             75,
@@ -64,12 +64,12 @@ export function DottedSurface({ className, ...props }: DottedSurfaceProps) {
 
                 positions.push(x, y, z);
                 if (theme === 'dark') {
-                    // Mix of white and blue
-                    const isBlue = Math.random() > 0.8;
-                    if (isBlue) {
-                        colors.push(0.2, 0.4, 1.0);
+                    // Mix of white and emerald/teal
+                    const isTeal = Math.random() > 0.8;
+                    if (isTeal) {
+                        colors.push(0.2, 0.8, 0.6);
                     } else {
-                        colors.push(0.6, 0.6, 0.6);
+                        colors.push(0.5, 0.5, 0.5);
                     }
                 } else {
                     colors.push(0, 0, 0);

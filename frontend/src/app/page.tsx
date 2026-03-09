@@ -1,32 +1,27 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowRight, Database, Code, Shield, Zap, Plug } from "lucide-react";
+import { ArrowRight, Database, Code, Shield, Plug } from "lucide-react";
 import { DottedSurface } from "@/components/DottedSurface";
 
 export default function LandingPage() {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen text-white overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+    <div className="relative min-h-screen text-foreground overflow-hidden flex flex-col items-center justify-center p-6 text-center bg-background">
       {/* Background Layer */}
-      <div className="absolute inset-0 bg-[#0a0a0b] -z-20" />
-      <DottedSurface className="z-0 opacity-40" />
+      <DottedSurface className="z-0 opacity-25" />
 
       <div className="relative z-10 max-w-4xl space-y-8 animate-in fade-in zoom-in duration-1000">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold tracking-[0.3em] uppercase text-blue-400 mb-4">
-          <Zap className="w-3 h-3 fill-current" />
-          RAG-Powered Intelligence
-        </div>
 
         <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
           QuerySense<br />
-          <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-500 bg-clip-text text-transparent">
+          <span className="text-ring">
             DB
           </span>
         </h1>
 
-        <p className="text-xl md:text-2xl text-white/40 max-w-2xl mx-auto leading-relaxed font-medium">
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-normal">
           Bridge the gap between natural language and complex databases.
           Talk to your data in plain English and let AI handle the query generation.
         </p>
@@ -34,46 +29,46 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
           <button
             onClick={() => router.push("/setup")}
-            className="group relative px-10 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:scale-105 hover:shadow-[0_0_50px_rgba(37,99,235,0.4)] active:scale-95 shadow-xl"
+            className="group relative px-10 py-4 bg-primary text-primary-foreground text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:scale-[1.03] active:scale-95 shadow-lg"
           >
             Get Started
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
 
           <div className="relative">
             <button
               onClick={() => router.push("/mcp")}
-              className="px-8 py-5 bg-blue-500/10 border border-blue-500/20 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-blue-500/20 active:scale-95 text-blue-400 group"
+              className="px-8 py-4 bg-secondary border border-border text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:bg-accent active:scale-95 text-secondary-foreground group"
             >
-              <Plug className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+              <Plug className="w-4 h-4 group-hover:rotate-12 transition-transform text-ring" />
               MCP Server
             </button>
-            <span className="absolute -top-2 -right-2 px-2 py-1 rounded-lg bg-indigo-500 text-[10px] font-black text-white shadow-lg shadow-indigo-500/30 animate-pulse">
+            <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-md bg-primary text-primary-foreground text-[9px] font-bold shadow-sm">
               HYBRID
             </span>
           </div>
 
           <button
             onClick={() => window.open("https://github.com/VedantPandhare/Textual-SQL", "_blank")}
-            className="px-8 py-5 bg-white/5 border border-white/10 text-lg font-bold rounded-2xl flex items-center gap-3 transition-all hover:bg-white/10 active:scale-95 text-white/60"
+            className="px-8 py-4 bg-secondary border border-border text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:bg-accent active:scale-95 text-muted-foreground"
           >
             View Github
           </button>
         </div>
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-20">
           {[
-            { icon: <Database />, title: "Schema Aware", desc: "Instantly indexes your database schema for accurate queries." },
-            { icon: <Code />, title: "SQL Generation", desc: "Converts natural language to optimized SQL in seconds." },
-            { icon: <Shield />, title: "Secure Access", desc: "Uses standard pooler connections with local persistence." }
+            { icon: <Database className="w-5 h-5" />, title: "Schema Aware", desc: "Instantly indexes your database schema for accurate queries." },
+            { icon: <Code className="w-5 h-5" />, title: "SQL Generation", desc: "Converts natural language to optimized SQL in seconds." },
+            { icon: <Shield className="w-5 h-5" />, title: "Secure Access", desc: "Uses standard pooler connections with local persistence." }
           ].map((feature, i) => (
-            <div key={i} className="p-6 bg-white/5 border border-white/10 rounded-3xl text-left space-y-3 backdrop-blur-sm transition-all hover:border-blue-500/50 group">
-              <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
+            <div key={i} className="p-6 bg-card border border-border rounded-2xl text-left space-y-3 backdrop-blur-sm transition-all hover:border-ring/50 group">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-ring group-hover:bg-primary group-hover:text-primary-foreground transition-all">
                 {feature.icon}
               </div>
-              <h3 className="text-lg font-bold font-sans uppercase tracking-widest text-[10px] text-white/40">{feature.title}</h3>
-              <p className="text-sm text-white/60 leading-relaxed font-medium">{feature.desc}</p>
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{feature.title}</h3>
+              <p className="text-sm text-popover-foreground leading-relaxed">{feature.desc}</p>
             </div>
           ))}
         </div>
