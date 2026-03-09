@@ -156,44 +156,44 @@ export default function ChatPage() {
 
   if (checkingConnection) {
     return (
-      <div className="h-screen bg-[#0a0a0b] flex items-center justify-center">
+      <div className="h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-          <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Initializing Intelligence...</p>
+          <Loader2 className="w-12 h-12 text-ring animate-spin" />
+          <p className="text-muted-foreground text-sm font-medium tracking-widest uppercase">Initializing Intelligence...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#0a0a0b] text-white font-sans selection:bg-blue-500/30">
+    <div className="flex flex-col h-screen bg-background text-foreground font-sans selection:bg-ring/30">
       {/* Header */}
-      <header className="border-b border-white/10 p-4 flex justify-between items-center backdrop-blur-md bg-black/20 sticky top-0 z-10">
+      <header className="border-b border-border p-4 flex justify-between items-center backdrop-blur-md bg-card/80 sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="bg-blue-600 p-2 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)]">
-            <Database className="w-6 h-6" />
+          <div className="bg-primary p-2 rounded-xl shadow-lg">
+            <Database className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold tracking-tight text-foreground">
               CRUDbot
             </h1>
-            <p className="text-xs text-white/40 font-medium tracking-wide flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-              RAG-POWERED ANALYTICS
+            <p className="text-xs text-muted-foreground font-medium tracking-wide flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 bg-ring rounded-full animate-pulse" />
+              INTELLIGENT ANALYTICS
             </p>
           </div>
         </div>
         <div className="flex gap-2">
           <button
             onClick={() => router.push("/setup")}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95 text-white/60"
+            className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-accent rounded-lg text-sm transition-all border border-border active:scale-95 text-muted-foreground"
           >
             <Settings className="w-4 h-4" />
             Settings
           </button>
           <button
             onClick={indexSchema}
-            className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-lg text-sm transition-all border border-white/10 active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-accent rounded-lg text-sm transition-all border border-border active:scale-95 text-foreground"
           >
             <RefreshCcw className="w-4 h-4" />
             Sync Schema
@@ -205,37 +205,37 @@ export default function ChatPage() {
       <main className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 max-w-5xl mx-auto w-full scrollbar-hide" ref={scrollRef}>
         {messages.map((msg, i) => (
           <div key={i} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-            <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${msg.role === "user" ? "bg-white/10 border border-white/10" : "bg-blue-600/10 border border-blue-500/20"
+            <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg transition-transform hover:scale-110 ${msg.role === "user" ? "bg-secondary border border-border" : "bg-primary/10 border border-primary/20"
               }`}>
-              {msg.role === "user" ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-blue-400" />}
+              {msg.role === "user" ? <User className="w-5 h-5 text-foreground" /> : <Bot className="w-5 h-5 text-ring" />}
             </div>
 
             <div className={`flex flex-col gap-3 max-w-[85%] ${msg.role === "user" ? "items-end" : ""}`}>
               <div className={`p-4 rounded-2xl leading-relaxed text-[15px] ${msg.role === "user"
-                ? "bg-blue-600 text-white rounded-tr-none shadow-[0_4px_20px_rgba(37,99,235,0.25)]"
-                : "bg-white/[0.03] border border-white/10 rounded-tl-none backdrop-blur-md"
+                ? "bg-primary text-primary-foreground rounded-tr-none shadow-lg"
+                : "bg-card border border-border rounded-tl-none backdrop-blur-md"
                 }`}>
                 {msg.content}
               </div>
 
               {msg.sql && (
-                <div className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
-                    <div className="flex items-center gap-2 text-xs font-mono text-white/60 uppercase tracking-widest">
+                <div className="w-full bg-muted border border-border rounded-2xl overflow-hidden shadow-lg">
+                  <div className="bg-secondary px-4 py-2 flex items-center justify-between border-b border-border">
+                    <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase tracking-widest">
                       <Terminal className="w-3.5 h-3.5" />
                       Generated SQL
                     </div>
                   </div>
-                  <pre className="p-4 overflow-x-auto text-sm font-mono text-blue-300">
+                  <pre className="p-4 overflow-x-auto text-sm font-mono text-ring">
                     <code>{msg.sql}</code>
                   </pre>
                 </div>
               )}
 
               {msg.results && msg.results.length > 0 && (
-                <div className="w-full bg-black/40 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                  <div className="bg-white/5 px-4 py-2 flex items-center justify-between border-b border-white/10">
-                    <div className="flex items-center gap-2 text-xs font-mono text-white/60 uppercase tracking-widest">
+                <div className="w-full bg-muted border border-border rounded-2xl overflow-hidden shadow-lg">
+                  <div className="bg-secondary px-4 py-2 flex items-center justify-between border-b border-border">
+                    <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground uppercase tracking-widest">
                       <TableIcon className="w-3.5 h-3.5" />
                       Query Results
                     </div>
@@ -243,17 +243,17 @@ export default function ChatPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left">
                       <thead>
-                        <tr className="border-b border-white/10 bg-white/5">
+                        <tr className="border-b border-border bg-secondary">
                           {Object.keys(msg.results[0]).map((key) => (
-                            <th key={key} className="px-4 py-3 font-semibold text-white/40 uppercase tracking-wider text-[10px]">{key}</th>
+                            <th key={key} className="px-4 py-3 font-semibold text-muted-foreground uppercase tracking-wider text-[10px]">{key}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
                         {msg.results.map((row, idx) => (
-                          <tr key={idx} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                          <tr key={idx} className="border-b border-border/50 hover:bg-accent/50 transition-colors">
                             {Object.values(row).map((val: any, j) => (
-                              <td key={j} className="px-4 py-3 text-white/80">{String(val)}</td>
+                              <td key={j} className="px-4 py-3 text-foreground">{String(val)}</td>
                             ))}
                           </tr>
                         ))}
@@ -267,16 +267,16 @@ export default function ChatPage() {
         ))}
         {loading && (
           <div className="flex gap-4 animate-pulse">
-            <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white/20" />
+            <div className="w-10 h-10 rounded-2xl bg-secondary border border-border flex items-center justify-center">
+              <Bot className="w-5 h-5 text-muted-foreground" />
             </div>
-            <div className="h-12 bg-white/5 border border-white/10 rounded-3xl rounded-tl-none w-32" />
+            <div className="h-12 bg-secondary border border-border rounded-3xl rounded-tl-none w-32" />
           </div>
         )}
       </main>
 
       {/* Input Area */}
-      <div className="p-4 md:p-8 bg-gradient-to-t from-[#0a0a0b] via-[#0a0a0b] to-transparent">
+      <div className="p-4 md:p-8 bg-gradient-to-t from-background via-background to-transparent">
         <div className="max-w-5xl mx-auto">
           <form onSubmit={handleSubmit} className="relative group">
             <input
@@ -291,14 +291,14 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Query your database (e.g., 'Show me all orders from Alice')"
-              className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 pr-28 outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all text-lg placeholder:text-white/20 hover:border-white/20"
+              className="w-full bg-input border border-border rounded-2xl px-6 py-5 pr-28 outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring/50 transition-all text-lg placeholder:text-muted-foreground/40 hover:border-border"
             />
             <div className="absolute right-3 top-3 flex gap-2">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploading || loading}
-                className="p-3 bg-white/5 border border-white/10 rounded-xl text-white/60 hover:bg-white/10 hover:text-white disabled:opacity-50 transition-all active:scale-95"
+                className="p-3 bg-secondary border border-border rounded-xl text-muted-foreground hover:bg-accent hover:text-foreground disabled:opacity-50 transition-all active:scale-95"
                 title="Import CSV or Excel"
               >
                 {uploading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Plus className="w-6 h-6" />}
@@ -306,7 +306,7 @@ export default function ChatPage() {
               <button
                 type="submit"
                 disabled={loading || !input.trim() || uploading}
-                className="p-3 bg-blue-600 rounded-xl text-white hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600 transition-all shadow-lg active:scale-95"
+                className="p-3 bg-primary rounded-xl text-primary-foreground hover:opacity-90 disabled:opacity-50 transition-all shadow-lg active:scale-95"
               >
                 <Send className="w-6 h-6" />
               </button>
