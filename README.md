@@ -31,39 +31,7 @@ Your MCP server will be available at: `https://your-project.vercel.app/api/mcp`
 
 ## 🔌 MCP Startup (Connect Your AI)
 
-You can connect this application's database capabilities to your favorite AI assistants using the Model Context Protocol (MCP).
-
-### 1. Claude Desktop
-Add this to your `claude_desktop_config.json` (found in `%APPDATA%\Claude\` on Windows or `~/Library/Application Support/Claude/` on macOS):
-
-```json
-{
-  "mcpServers": {
-    "textual-sql": {
-      "type": "http",
-      "url": "https://your-project.vercel.app/api/mcp"
-    }
-  }
-}
-```
-
-### 2. VS Code / GitHub Copilot
-To use this server with GitHub Copilot in VS Code, create a `.vscode/mcp.json` file in your workspace:
-
-```json
-{
-  "mcpServers": {
-    "textual-sql": {
-      "type": "http",
-      "url": "https://your-project.vercel.app/api/mcp"
-    }
-  }
-}
-```
-*Note: Ensure the GitHub Copilot extension is updated and you are using the Agent mode to leverage MCP tools.*
-
----
-
+You can connect this app
 ## Project Structure
 
 - `backend/`: FastAPI server handling SQL generation, RAG logic, and database connections (Legacy/Alternative).
