@@ -29,13 +29,3 @@ Your MCP server will be available at: `https://your-project.vercel.app/api/mcp`
 
 ---
 
-## 🔌 MCP Startup (Connect Your AI)
-
-You can connect this app
-## Project Structure
-
-- `backend/`: FastAPI server handling SQL generation, RAG logic, and database connections (Legacy/Alternative).
-- `frontend/`: Next.js application with built-in Hybrid MCP Handler and premium UI.
-- `chinook.db`: Sample SQLite database for local testing.
----
-Created with ❤️ by [Vedant Pandhare](https://github.com/VedantPandhare)
