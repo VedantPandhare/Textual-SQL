@@ -2,7 +2,8 @@
 
 Textual SQL is a premium, AI-powered platform that allows you to talk to your databases in plain English. Powered by RAG (Retrieval-Augmented Generation) and Groq's high-performance LLMs, it converts natural language queries into optimized SQL in seconds.
 
-![Landing Page Preview](./landing_page.png)
+<img width="2874" height="1528" alt="image" src="https://github.com/user-attachments/assets/9ef900a9-6de6-46c5-b8e4-f798cc354bd8" />
+
 
 ## Key Features
 
@@ -11,6 +12,10 @@ Textual SQL is a premium, AI-powered platform that allows you to talk to your da
 - **Intelligent SQL Chat**: Deep-learning powered translation of natural language to SQL.
 - **Hybrid MCP Server**: Run your MCP server directly inside the Next.js frontend for faster, secure, and easier deployment.
 - **Secure & Private**: Support for transaction pooler URLs and local credential persistence.
+
+## system architechture
+<img width="977" height="1511" alt="image" src="https://github.com/user-attachments/assets/74322998-6ad9-42b2-bb07-528bcbb1a358" />
+
 
 ## Deployment to Vercel (Recommended)
 
