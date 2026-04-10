@@ -1,10 +1,10 @@
-# 🤖 Textual SQL - Bridge the Gap Between Language and Data
+# Textual SQL - Bridge the Gap Between Language and Data
 
 Textual SQL is a premium, AI-powered platform that allows you to talk to your databases in plain English. Powered by RAG (Retrieval-Augmented Generation) and Groq's high-performance LLMs, it converts natural language queries into optimized SQL in seconds.
 
 ![Landing Page Preview](./landing_page.png)
 
-## ✨ Key Features
+## Key Features
 
 - **Intuitive Landing Page**: A stunning Three.js-powered animated background for a premium user experience.
 - **RAG-Powered Intelligence**: Automatically indexes your database schema to provide context-aware SQL generation.
@@ -12,7 +12,7 @@ Textual SQL is a premium, AI-powered platform that allows you to talk to your da
 - **Hybrid MCP Server**: Run your MCP server directly inside the Next.js frontend for faster, secure, and easier deployment.
 - **Secure & Private**: Support for transaction pooler URLs and local credential persistence.
 
-## 🚀 Deployment to Vercel (Recommended)
+## Deployment to Vercel (Recommended)
 
 To deploy the **Textual SQL** platform and make the MCP server available globally:
 
@@ -29,52 +29,3 @@ Your MCP server will be available at: `https://your-project.vercel.app/api/mcp`
 
 ---
 
-## 🔌 MCP Startup (Connect Your AI)
-
-You can connect this application's database capabilities to your favorite AI assistants using the Model Context Protocol (MCP).
-
-### 1. Claude Desktop
-Add this to your `claude_desktop_config.json` (found in `%APPDATA%\Claude\` on Windows or `~/Library/Application Support/Claude/` on macOS):
-
-```json
-{
-  "mcpServers": {
-    "textual-sql": {
-      "type": "http",
-      "url": "https://your-project.vercel.app/api/mcp"
-    }
-  }
-}
-```
-
-### 2. VS Code / GitHub Copilot
-To use this server with GitHub Copilot in VS Code, create a `.vscode/mcp.json` file in your workspace:
-
-```json
-{
-  "mcpServers": {
-    "textual-sql": {
-      "type": "http",
-      "url": "https://your-project.vercel.app/api/mcp"
-    }
-  }
-}
-```
-*Note: Ensure the GitHub Copilot extension is updated and you are using the Agent mode to leverage MCP tools.*
-
----
-
-## 📁 Project Structure
-
-- `backend/`: FastAPI server handling SQL generation, RAG logic, and database connections (Legacy/Alternative).
-- `frontend/`: Next.js application with built-in Hybrid MCP Handler and premium UI.
-- `chinook.db`: Sample SQLite database for local testing.
-
-## 🛠️ Built With
-
-- **Frontend**: Next.js, Tailwind CSS, Three.js, Lucide React.
-- **Intelligence**: LangChain, Groq (Llama 3.3).
-- **Database**: PostgreSQL, SQLite.
-
----
-Created with ❤️ by [Vedant Pandhare](https://github.com/VedantPandhare)
