@@ -1,36 +1,114 @@
-# Textual SQL - Bridge the Gap Between Language and Data
+# Database MCP Server
 
-Textual SQL is a premium, AI-powered platform that allows you to talk to your databases in plain English. Powered by RAG (Retrieval-Augmented Generation) and Groq's high-performance LLMs, it converts natural language queries into optimized SQL in seconds.
+A local [Model Context Protocol](https://modelcontextprotocol.io) server that gives Claude Desktop direct read/write access to your PostgreSQL or Supabase database.
 
-<img width="2874" height="1528" alt="image" src="https://github.com/user-attachments/assets/9ef900a9-6de6-46c5-b8e4-f798cc354bd8" />
-
-
-## Key Features
-
-- **Intuitive Landing Page**: A stunning Three.js-powered animated background for a premium user experience.
-- **RAG-Powered Intelligence**: Automatically indexes your database schema to provide context-aware SQL generation.
-- **Intelligent SQL Chat**: Deep-learning powered translation of natural language to SQL.
-- **Hybrid MCP Server**: Run your MCP server directly inside the Next.js frontend for faster, secure, and easier deployment.
-- **Secure & Private**: Support for transaction pooler URLs and local credential persistence.
-
-## system architechture
-<img width="977" height="1511" alt="image" src="https://github.com/user-attachments/assets/74322998-6ad9-42b2-bb07-528bcbb1a358" />
-
-
-## Deployment to Vercel (Recommended)
-
-To deploy the **Textual SQL** platform and make the MCP server available globally:
-
-1.  **Vercel Configuration**:
-    - Framework Preset: `Next.js`
-    - Root Directory: `frontend`
-2.  **Environment Variables**:
-    - `GROQ_API_KEY`: Your Groq API Key.
-    - `DATABASE_URL`: Your PostgreSQL connection string.
-    - `NEXT_PUBLIC_API_URL`: (Optional) URL of your backend if using a separate service.
-3.  **Deployment**: Push your code to GitHub and connect it to Vercel.
-
-Your MCP server will be available at: `https://your-project.vercel.app/api/mcp`
+You run it on your own machine. Claude Desktop spawns it automatically. Your database credentials never leave your computer.
 
 ---
 
+## What it does
+
+Once set up, you can talk to Claude in plain English and it will query your real database:
+
+> *"Show me the last 10 orders with their totals"*
+> *"How many users signed up this month?"*
+> *"Insert a new product: name Widget, price 9.99"*
+> *"What tables do I have?"*
+
+Claude decides which tool to call — you just have a conversation.
+
+---
+
+## How it works
+
+```
+Claude Desktop  →  MCP (stdio)  →  Python server  →  Your database
+```
+
+Claude Desktop starts the Python process on launch via stdio transport (no open ports, no HTTP). The server registers 8 database tools that Claude can call during any conversation.
+
+This is the same model used by the official Supabase MCP server and every serious database tool in Anthropic's MCP registry.
+
+---
+
+## Prerequisites
+
+- Python 3.10+
+- pip
+- [Claude Desktop](https://claude.ai/download)
+- A PostgreSQL or Supabase database (you need the connection string)
+
+---
+
+## Available tools
+
+| Tool | Parameters | What it does |
+|---|---|---|
+| `list_tables` | — | List all tables |
+| `describe_table` | `table_name` | Columns and types for a table |
+| `get_schema` | — | Full schema of every table |
+| `execute_sql` | `sql` | Run any SQL statement |
+| `select_rows` | `table, columns?, where?, limit?, offset?, order_by?, ascending?` | SELECT with filters and pagination |
+| `insert_row` | `table_name, data` | Insert one row |
+| `update_rows` | `table_name, data, where` | Update rows matching a condition |
+| `delete_rows` | `table_name, where` | Delete rows matching a condition |
+
+---
+
+## Running the HTTP server (optional)
+
+The server can also run as a Streamable HTTP endpoint (for testing with MCP Inspector or deploying to Render):
+
+```bash
+python server.py                  # HTTP on port 8000 (default)
+python server.py stdio            # stdio mode for Claude Desktop
+PORT=9000 python server.py        # custom port
+```
+
+---
+
+## Security
+
+**Use a read-only database role for exploratory work.**  
+The `execute_sql` and `delete_rows` tools can modify data. Create a restricted role so the model can only do what you allow:
+
+```sql
+-- Run in your Supabase SQL editor
+CREATE ROLE readonly_mcp WITH LOGIN PASSWORD 'choose-a-password';
+GRANT CONNECT ON DATABASE postgres TO readonly_mcp;
+GRANT USAGE ON SCHEMA public TO readonly_mcp;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_mcp;
+```
+
+Then use that role's credentials in `DATABASE_URL`.
+
+---
+
+## Project structure
+
+```
+Textual-SQL/
+├── backend/          ← Python MCP server (the main product)
+│   ├── server.py     ← FastMCP entry point, tool definitions
+│   ├── db.py         ← SQLAlchemy database engine
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── render.yaml   ← Deploy to Render (optional HTTP mode)
+│
+└── frontend/         ← Next.js documentation site
+    └── src/app/
+        ├── page.tsx      ← Landing page
+        ├── mcp/page.tsx  ← Full setup & tool documentation
+        └── api/mcp/      ← MCP HTTP endpoint (mirrors Python server)
+```
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| MCP server | Python, [FastMCP](https://github.com/modelcontextprotocol/python-sdk) |
+| Database | SQLAlchemy 2.0, psycopg2 |
+| Documentation site | Next.js 16, Tailwind CSS |
+| MCP transport | stdio (primary), Streamable HTTP (optional) |

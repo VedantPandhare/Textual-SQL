@@ -1,79 +1,87 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowRight, Database, Code, Shield, Plug } from "lucide-react";
+import { ArrowRight, Database, Lock, Cpu } from "lucide-react";
 import { DottedSurface } from "@/components/DottedSurface";
 
 export default function LandingPage() {
-  const router = useRouter();
+    const router = useRouter();
 
-  return (
-    <div className="relative min-h-screen text-foreground overflow-hidden flex flex-col items-center justify-center p-6 text-center bg-background">
-      {/* Background Layer */}
-      <DottedSurface className="z-0 opacity-25" />
+    return (
+        <div className="relative min-h-screen text-foreground overflow-hidden flex flex-col items-center justify-center p-6 bg-background">
+            <DottedSurface className="z-0 opacity-20" />
 
-      <div className="relative z-10 max-w-4xl space-y-8 animate-in fade-in zoom-in duration-1000">
+            <div className="relative z-10 max-w-3xl w-full space-y-12 text-center">
 
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
-          QuerySense<br />
-          <span className="text-ring">
-            DB
-          </span>
-        </h1>
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold tracking-[0.3em] uppercase text-ring">
+                    <Database className="w-3 h-3" />
+                    MCP Server · Local · Open Source
+                </div>
 
-        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-normal">
-          Bridge the gap between natural language and complex databases.
-          Talk to your data in plain English and let AI handle the query generation.
-        </p>
+                {/* Headline */}
+                <div className="space-y-4">
+                    <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+                        Database<br />
+                        <span className="text-ring">MCP Server</span>
+                    </h1>
+                    <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
+                        Give Claude Desktop direct access to your PostgreSQL or Supabase database —
+                        runs locally on your machine, your credentials never leave.
+                    </p>
+                </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8">
-          <button
-            onClick={() => router.push("/setup")}
-            className="group relative px-10 py-4 bg-primary text-primary-foreground text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:scale-[1.03] active:scale-95 shadow-lg"
-          >
-            Get Started
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+                {/* CTAs */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button
+                        onClick={() => router.push("/mcp")}
+                        className="group px-8 py-4 bg-primary text-primary-foreground font-bold rounded-xl flex items-center gap-3 hover:opacity-90 transition-all active:scale-95 shadow-lg text-base"
+                    >
+                        Setup Guide
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    <a
+                        href="https://github.com/VedantPandhare/Textual-SQL"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-8 py-4 bg-secondary border border-border text-muted-foreground font-bold rounded-xl hover:bg-accent transition-all active:scale-95 text-base"
+                    >
+                        View on GitHub
+                    </a>
+                </div>
 
-          <div className="relative">
-            <button
-              onClick={() => router.push("/mcp")}
-              className="px-8 py-4 bg-secondary border border-border text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:bg-accent active:scale-95 text-secondary-foreground group"
-            >
-              <Plug className="w-4 h-4 group-hover:rotate-12 transition-transform text-ring" />
-              MCP Server
-            </button>
-            <span className="absolute -top-2 -right-2 px-2 py-0.5 rounded-md bg-primary text-primary-foreground text-[9px] font-bold shadow-sm">
-              HYBRID
-            </span>
-          </div>
-
-          <button
-            onClick={() => window.open("https://github.com/VedantPandhare/Textual-SQL", "_blank")}
-            className="px-8 py-4 bg-secondary border border-border text-base font-semibold rounded-xl flex items-center gap-3 transition-all hover:bg-accent active:scale-95 text-muted-foreground"
-          >
-            View Github
-          </button>
-        </div>
-
-        {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-20">
-          {[
-            { icon: <Database className="w-5 h-5" />, title: "Schema Aware", desc: "Instantly indexes your database schema for accurate queries." },
-            { icon: <Code className="w-5 h-5" />, title: "SQL Generation", desc: "Converts natural language to optimized SQL in seconds." },
-            { icon: <Shield className="w-5 h-5" />, title: "Secure Access", desc: "Uses standard pooler connections with local persistence." }
-          ].map((feature, i) => (
-            <div key={i} className="p-6 bg-card border border-border rounded-2xl text-left space-y-3 backdrop-blur-sm transition-all hover:border-ring/50 group">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-ring group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                {feature.icon}
-              </div>
-              <h3 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{feature.title}</h3>
-              <p className="text-sm text-popover-foreground leading-relaxed">{feature.desc}</p>
+                {/* Feature pills */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                    {[
+                        {
+                            icon: <Lock className="w-5 h-5" />,
+                            title: "Credentials Stay Local",
+                            desc: "Your database password never touches a third-party server.",
+                        },
+                        {
+                            icon: <Cpu className="w-5 h-5" />,
+                            title: "No LLM Middleware",
+                            desc: "Claude speaks directly to your database through MCP tools.",
+                        },
+                        {
+                            icon: <Database className="w-5 h-5" />,
+                            title: "PostgreSQL & Supabase",
+                            desc: "Works with any PostgreSQL-compatible connection string.",
+                        },
+                    ].map((f) => (
+                        <div
+                            key={f.title}
+                            className="p-5 bg-card border border-border rounded-2xl text-left space-y-2 hover:border-ring/30 transition-colors group"
+                        >
+                            <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-ring group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                                {f.icon}
+                            </div>
+                            <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{f.title}</p>
+                            <p className="text-sm text-muted-foreground/80 leading-relaxed">{f.desc}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-          ))}
         </div>
-      </div>
-
-    </div>
-  );
+    );
 }

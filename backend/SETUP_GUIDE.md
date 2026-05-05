@@ -1,138 +1,168 @@
-# Getting Your API Keys and Database Setup
+# Backend Setup Guide
 
-## 1. LLM API Keys (Choose One or Both!)
+The backend is a Python MCP server. It connects to your database and exposes tools that Claude Desktop can call.
 
-The system supports **both Gemini and Groq** with automatic fallback:
-- **Priority**: Gemini → Groq
-- You can set both keys, and the system will use Gemini by default
-- If Gemini key is missing, it will automatically use Groq
+---
 
-### Option A: Google Gemini (Recommended)
+## Requirements
 
-**How to Get It:**
-1. Go to **[Google AI Studio](https://aistudio.google.com/app/apikey)**
-2. Sign in with your Google account
-3. Click **"Get API Key"** or **"Create API Key"**
-4. Copy the generated API key
-5. Add to `.env`: `GOOGLE_API_KEY=your_actual_key_here`
+- Python 3.10 or higher
+- pip
+- A PostgreSQL or Supabase database
 
-**Benefits:** Generous free tier, excellent performance, latest models
+Check your Python version:
 
-### Option B: Groq (Alternative)
-
-**How to Get It:**
-1. Go to **[Groq Console](https://console.groq.com/keys)**
-2. Sign up and create an API key
-3. Add to `.env`: `GROQ_API_KEY=your_actual_key_here`
-
-**Benefits:** Extremely fast inference, great for real-time applications
-
-### Using Both (Recommended for Production)
 ```bash
-GOOGLE_API_KEY=your_gemini_key
-GROQ_API_KEY=your_groq_key  # Fallback if Gemini fails
+python --version
 ```
 
 ---
 
-## 2. Database Options
+## Installation
 
-You have **TWO options** for the database:
-
-### Option A: SQLite (Recommended for Getting Started)
-- **No setup needed!** Already configured by default
-- Local database file (`chinook.db`)
-- Perfect for development and testing
-- Already created when you ran `setup_db.py`
-
-**Configuration in `.env`:**
 ```bash
-DATABASE_TYPE=sqlite
-DATABASE_URL=sqlite:///./chinook.db
+# From the repo root
+cd backend
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
-### Option B: PostgreSQL (Supabase or Other)
-- Use this for production or if you need a cloud database
-- Supabase offers a generous free tier
+Dependencies installed:
 
-#### How to Get Supabase Database URL:
-
-1. **Create a Supabase Project:**
-   - Go to [supabase.com](https://supabase.com)
-   - Sign up and create a new project
-   - **Save your database password** - you'll need it later!
-   - Wait for the project to be provisioned (~2 minutes)
-
-2. **Get Your PostgreSQL Connection String:**
-   
-   **The URL and API keys you see in "API Settings" are NOT what you need!**
-   
-   **Correct Method - Using Database Settings:**
-   - In the left sidebar, click **Settings** (⚙️ icon)
-   - Under **PROJECT SETTINGS**, look for **"Database"** option
-   - If you don't see "Database", try clicking on **"Project Settings"** at the top
-   - Scroll down to find **"Connection string"** or **"Connection pooling"**
-   - Look for the **PostgreSQL** connection string (not the API URL)
-   
-   **Alternative Method - Direct Connection Info:**
-   - Click on the **"Connect"** button at the top of your dashboard
-   - Select **"Direct connection"** or **"Connection pooling"**
-   - Choose **"URI"** format
-   - Copy the connection string that looks like:
-     ```
-     postgresql://postgres:[YOUR-PASSWORD]@db.xxxxxx.supabase.co:5432/postgres
-     ```
-     OR (for pooler):
-     ```
-     postgresql://postgres.xxxxxx:[YOUR-PASSWORD]@aws-0-us-east-1.pooler.supabase.com:6543/postgres
-     ```
-   - Replace `[YOUR-PASSWORD]` with your actual database password
-
-   **What you're seeing (API Settings) vs What you need:**
-   - ❌ **API URL**: `https://xxxxxx.supabase.co` - This is for REST API, NOT for direct database connection
-   - ❌ **Publishable API Key**: `eyJhbGc...` - This is for JavaScript client, NOT for database
-   - ✅ **PostgreSQL URI**: `postgresql://postgres:...` - This is what you need!
-
-3. **Configure in `.env`:**
-```bash
-DATABASE_TYPE=postgresql
-DATABASE_URL=postgresql://postgres:your_password@db.xxxxxx.supabase.co:5432/postgres
-```
-
-**Important Notes:**
-- The REST API URL (https://...) is different from the PostgreSQL connection string (postgresql://...)
-- You need the **PostgreSQL database connection string**, not the API endpoint
-- If you can't find it, look for a "Connect" button in your project dashboard
-
-4. **Create Tables in Supabase:**
-   - You'll need to create the same tables (Users, Orders) in Supabase
-   - You can use the Supabase SQL Editor or modify `setup_db.py` to work with PostgreSQL
+| Package | Purpose |
+|---|---|
+| `mcp[cli]` | MCP server SDK (FastMCP, stdio and HTTP transport) |
+| `sqlalchemy` | Database engine and query execution |
+| `psycopg2-binary` | PostgreSQL driver |
+| `python-dotenv` | Load `.env` file |
+| `uvicorn` | ASGI server (used when running in HTTP mode) |
 
 ---
 
-## Quick Start
+## Configuration
 
-1. **Copy the example environment file:**
-   ```bash
-   cd backend
-   cp .env.example .env
-   ```
+Copy the example environment file:
 
-2. **Edit `.env` and add your Gemini API key:**
-   ```bash
-   GOOGLE_API_KEY=your_actual_gemini_key_here
-   DATABASE_TYPE=sqlite
-   DATABASE_URL=sqlite:///./chinook.db
-   ```
+```bash
+cp .env.example .env
+```
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+Open `.env` and set your connection string:
 
-4. **Run the backend:**
-   ```bash
-   uvicorn main:app --reload
-   ```
+```
+DATABASE_URL=postgresql://user:password@host:6543/postgres
+```
 
-That's it! The chatbot will use SQLite by default and Google Gemini for AI.
+That is the only variable required. The server reads nothing else from the environment.
+
+---
+
+## Getting your Supabase connection string
+
+1. Open your project in the [Supabase dashboard](https://supabase.com/dashboard)
+2. Go to **Project Settings → Database**
+3. Scroll to **Connection string**
+4. Select **Transaction pooler** (port 6543 — use this, not the direct connection on port 5432)
+5. Copy the URI — it looks like:
+
+```
+postgresql://postgres.xxxxxxxxxxxx:YOUR_PASSWORD@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres
+```
+
+Replace `YOUR_PASSWORD` with your actual database password.
+
+> If your project is on the free tier and has been inactive, Supabase may have paused it.
+> Resume it from the dashboard before connecting.
+
+---
+
+## Running the server
+
+### stdio mode (used by Claude Desktop)
+
+Claude Desktop starts this automatically — you do not run it manually.  
+But you can test it by running:
+
+```bash
+python server.py stdio
+```
+
+If the database connection succeeds you will see:
+```
+Connected to database: host:6543/postgres
+```
+
+If it fails, the error message tells you exactly what is wrong.
+
+### HTTP mode (optional, for testing)
+
+```bash
+python server.py
+# Server starts at http://localhost:8000/mcp
+```
+
+Use a custom port:
+```bash
+PORT=9000 python server.py
+```
+
+---
+
+## Connecting to Claude Desktop
+
+See [MCP_GUIDE.md](MCP_GUIDE.md) for the full Claude Desktop configuration.
+
+Short version — add this to `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "my-database": {
+      "command": "python",
+      "args": ["server.py", "stdio"],
+      "cwd": "/absolute/path/to/backend",
+      "env": {
+        "DATABASE_URL": "postgresql://user:password@host:6543/postgres"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Project files
+
+```
+backend/
+├── server.py          Entry point. Defines all 8 MCP tools using FastMCP.
+├── db.py              Database engine. Wraps SQLAlchemy for all queries.
+├── requirements.txt   Python dependencies.
+├── .env               Your local config (gitignored — never commit this).
+├── .env.example       Template showing required variables.
+├── MCP_GUIDE.md       Claude Desktop setup walkthrough.
+├── SETUP_GUIDE.md     This file.
+├── Procfile           For Render.com deployment (HTTP mode).
+└── render.yaml        Render.com service definition (HTTP mode).
+```
+
+---
+
+## Common errors
+
+### `DATABASE_URL environment variable is required`
+You have not created `.env`, or the file is empty. Run `cp .env.example .env` and fill in your connection string.
+
+### `connection to server ... failed: FATAL: tenant/user not found`
+- The Supabase project is paused — resume it from the dashboard
+- The password in the connection string is wrong — reset it in Supabase and update `.env`
+- You are using the direct connection URL (port 5432) instead of the transaction pooler (port 6543)
+
+### `ModuleNotFoundError: No module named 'mcp'`
+Dependencies are not installed. Run `pip install -r requirements.txt`.
+
+### Tools do not show up in Claude Desktop
+- The `cwd` path in `claude_desktop_config.json` is wrong
+- `python` is not on your system PATH — try using the full path (e.g. `/usr/bin/python3`)
+- You did not fully quit and restart Claude Desktop after editing the config

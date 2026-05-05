@@ -10,8 +10,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "QuerySense DB - Intelligent SQL Assistant",
-  description: "Advanced database intelligence for natural language querying.",
+  title: "Database MCP Server",
+  description: "Model Context Protocol server for PostgreSQL and Supabase — connect Claude Desktop or any MCP client directly to your database.",
 };
 
 export default function RootLayout({
